@@ -1,0 +1,40 @@
+PHASE 1 — D3 FAILURE DEMONSTRATION
+Scenario: Stop one backend (Backend A)
+
+BEFORE FAILURE
+Six HTTPS requests through Nginx:
+1. HTTP 200 — Backend A
+2. HTTP 200 — Backend B
+3. HTTP 200 — Backend A
+4. HTTP 200 — Backend B
+5. HTTP 200 — Backend A
+6. HTTP 200 — Backend B
+
+FAILURE
+Backend A was stopped using:
+docker compose stop backend-a
+
+DURING FAILURE
+Six HTTPS requests through Nginx:
+1. HTTP 200 — Backend B
+2. HTTP 200 — Backend B
+3. HTTP 200 — Backend B
+4. HTTP 200 — Backend B
+5. HTTP 200 — Backend B
+6. HTTP 200 — Backend B
+
+The application remained available through Backend B while Backend A was unavailable.
+
+RECOVERY
+Backend A was started again using:
+docker compose start backend-a
+
+After recovery:
+1. HTTP 200 — Backend B
+2. HTTP 200 — Backend B
+3. HTTP 200 — Backend A
+4. HTTP 200 — Backend B
+5. HTTP 200 — Backend A
+6. HTTP 200 — Backend B
+
+This demonstrates service continuity during backend failure and restoration of load balancing after Backend A recovered.
