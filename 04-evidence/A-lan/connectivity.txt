@@ -1,0 +1,32 @@
+=== DNS ===
+PING 172.30.0.10 (172.30.0.10) 56(84) bytes of data.
+64 bytes from 172.30.0.10: icmp_seq=1 ttl=64 time=0.595 ms
+64 bytes from 172.30.0.10: icmp_seq=2 ttl=64 time=0.063 ms
+
+--- 172.30.0.10 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1010ms
+rtt min/avg/max/mdev = 0.063/0.329/0.595/0.266 ms
+=== EDGE ===
+PING 172.30.0.11 (172.30.0.11) 56(84) bytes of data.
+64 bytes from 172.30.0.11: icmp_seq=1 ttl=64 time=0.407 ms
+64 bytes from 172.30.0.11: icmp_seq=2 ttl=64 time=0.265 ms
+
+--- 172.30.0.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1019ms
+rtt min/avg/max/mdev = 0.265/0.336/0.407/0.071 ms
+=== BACKEND A ===
+PING 172.30.0.12 (172.30.0.12) 56(84) bytes of data.
+64 bytes from 172.30.0.12: icmp_seq=1 ttl=64 time=0.755 ms
+64 bytes from 172.30.0.12: icmp_seq=2 ttl=64 time=0.150 ms
+
+--- 172.30.0.12 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1021ms
+rtt min/avg/max/mdev = 0.150/0.452/0.755/0.302 ms
+=== BACKEND B ===
+PING 172.30.0.13 (172.30.0.13) 56(84) bytes of data.
+64 bytes from 172.30.0.13: icmp_seq=1 ttl=64 time=0.390 ms
+64 bytes from 172.30.0.13: icmp_seq=2 ttl=64 time=0.097 ms
+
+--- 172.30.0.13 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1022ms
+rtt min/avg/max/mdev = 0.097/0.243/0.390/0.146 ms

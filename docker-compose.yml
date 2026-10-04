@@ -1,0 +1,61 @@
+services:
+
+  dns:
+    build:
+      context: ./dns
+    container_name: cn-dns
+    hostname: dns
+    networks:
+      cnnet:
+        ipv4_address: 172.30.0.10
+    volumes:
+      - ./dns:/dns
+      - ./evidence:/evidence
+      - ./certs:/certs:ro
+  edge:
+    image: nginx:1.24
+    container_name: cn-edge
+    hostname: edge
+    networks:
+      cnnet:
+        ipv4_address: 172.30.0.11
+    volumes:
+      - ./edge/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/certs:ro
+      - ./evidence:/evidence
+
+  backend-a:
+    image: python:3.12-slim
+    container_name: cn-backend-a
+    hostname: backend-a
+    networks:
+      cnnet:
+        ipv4_address: 172.30.0.12
+    volumes:
+      - ./backend:/app
+    environment:
+      BACKEND: A
+      PORT: 3001
+    command: ["python", "/app/backend.py"]
+
+  backend-b:
+    image: python:3.12-slim
+    container_name: cn-backend-b
+    hostname: backend-b
+    networks:
+      cnnet:
+        ipv4_address: 172.30.0.13
+    volumes:
+      - ./backend:/app
+    environment:
+      BACKEND: B
+      PORT: 3002
+    command: ["python", "/app/backend.py"]
+
+networks:
+  cnnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+          gateway: 172.30.0.1

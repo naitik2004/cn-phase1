@@ -1,0 +1,4 @@
+=== BACKEND A ===
+{"backend": "A", "status": "ok"}
+=== BACKEND B ===
+{"backend": "B", "status": "ok"}

@@ -1,0 +1,6 @@
+subject=CN=app.team1.test
+issuer=CN=app.team1.test
+notBefore=Oct  4 13:56:55 2026 GMT
+notAfter=Oct  4 13:56:55 2027 GMT
+X509v3 Subject Alternative Name: 
+    DNS:app.team1.test
