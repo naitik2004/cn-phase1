@@ -1,0 +1,73 @@
+=== 0. Start edge2, recreate edge, set TTL=30s on dns & dns2 ===
+
+=== 1. Baseline: cached lookup -> 172.30.0.11 and HTTPS -> X-Edge: edge1 ===
+2026-11-24T22:54:05Z
+app.team1.test.		30	IN	A	172.30.0.11
+HTTP/2 200 
+x-backend: A
+x-edge: edge1
+{"backend": "A", "status": "ok"}
+
+=== 2. Verify edge2 (172.30.0.14) works on its own ===
+HTTP/2 200 
+x-backend: A
+x-edge: edge2
+{"backend": "A", "status": "ok"}
+
+=== 3. Cut over DNS on dns & dns2 to 172.30.0.14 (edge2) ===
+2026-11-24T22:54:06Z
+Authoritative dns now returns:
+app.team1.test.		30	IN	A	172.30.0.14
+--- Cached client after ~10s (22:54:16Z) ---
+app.team1.test.		18	IN	A	172.30.0.11
+HTTP/2 200 
+x-backend: B
+x-edge: edge1
+--- Cached client after ~20s (22:54:27Z) ---
+app.team1.test.		8	IN	A	172.30.0.11
+HTTP/2 200 
+x-backend: A
+x-edge: edge1
+--- Cached client after TTL expiry (~32s, 22:54:40Z) ---
+app.team1.test.		30	IN	A	172.30.0.14
+HTTP/2 200 
+x-backend: B
+x-edge: edge2
+
+=== 4. Manual cache flush gives immediate cutover ===
+Before flush (cache still points to 172.30.0.14 / edge2):
+app.team1.test.		29	IN	A	172.30.0.14
+HTTP/2 200 
+x-backend: A
+x-edge: edge2
+Flushing dns-cache:
+Immediately after flush (cuts over to 172.30.0.11 / edge1):
+app.team1.test.		30	IN	A	172.30.0.11
+HTTP/2 200 
+x-backend: B
+x-edge: edge1
+
+=== 5. Cut over to edge2, stop edge1 -> service stays UP via edge2 ===
+Resolved IP with edge1 stopped: 172.30.0.14
+HTTP/2 200 
+x-backend: B
+x-edge: edge2
+{"backend": "B", "status": "ok"}
+
+=== 6. Rollback: start edge1, restore 172.30.0.11 & TTL=60, confirm final state ===
+app.team1.test.		60	IN	A	172.30.0.11
+HTTP/2 200 
+x-backend: A
+x-edge: edge1
+{"backend": "A", "status": "ok"}
+Client still isolated from backends:
+Blocked as expected (timeout)
+NAME           IMAGE                 COMMAND                  SERVICE     CREATED             STATUS          PORTS
+cn-backend-a   python:3.12-slim      "python /app/backend…"   backend-a   About an hour ago   Up 58 minutes   
+cn-backend-b   python:3.12-slim      "python /app/backend…"   backend-b   About an hour ago   Up 58 minutes   
+cn-client      cn-phase1-client      "sleep infinity"         client      2 hours ago         Up 2 hours      
+cn-dns         cn-phase1-dns         "dnsmasq --no-daemon…"   dns         About an hour ago   Up 2 seconds    
+cn-dns-cache   cn-phase1-dns-cache   "dnsmasq --no-daemon…"   dns-cache   About an hour ago   Up 2 seconds    
+cn-dns2        cn-phase1-dns2        "dnsmasq --no-daemon…"   dns2        About an hour ago   Up 2 seconds    
+cn-edge        nginx:1.24            "/docker-entrypoint.…"   edge        42 seconds ago      Up 2 seconds    80/tcp
+cn-edge2       nginx:1.24            "/docker-entrypoint.…"   edge2       42 seconds ago      Up 41 seconds   80/tcp
