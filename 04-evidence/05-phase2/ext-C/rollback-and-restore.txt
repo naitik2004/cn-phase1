@@ -1,0 +1,10 @@
+=== 1. Rollback to pre-isolation config ===
+
+=== 2. Confirm client can reach backends directly after rollback ===
+{"backend": "A", "status": "ok"}
+{"backend": "B", "status": "ok"}
+=== 3. Re-apply isolated config (final state = ISOLATED) ===
+
+=== 4. Confirm isolation is active again ===
+
+{"backend": "A", "status": "ok"}

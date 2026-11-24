@@ -58,6 +58,8 @@ services:
     networks:
       cnnet:
         ipv4_address: 172.30.0.11
+      backend-net:
+        ipv4_address: 172.31.0.11
     volumes:
       - ./edge/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./certs:/certs:ro
@@ -68,8 +70,8 @@ services:
     container_name: cn-backend-a
     hostname: backend-a
     networks:
-      cnnet:
-        ipv4_address: 172.30.0.12
+      backend-net:
+        ipv4_address: 172.31.0.12
     volumes:
       - ./backend:/app
     environment:
@@ -82,8 +84,8 @@ services:
     container_name: cn-backend-b
     hostname: backend-b
     networks:
-      cnnet:
-        ipv4_address: 172.30.0.13
+      backend-net:
+        ipv4_address: 172.31.0.13
     volumes:
       - ./backend:/app
     environment:
@@ -98,3 +100,10 @@ networks:
       config:
         - subnet: 172.30.0.0/24
           gateway: 172.30.0.1
+  backend-net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.31.0.0/24
+          gateway: 172.31.0.1
