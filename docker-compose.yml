@@ -10,6 +10,7 @@ services:
         ipv4_address: 172.30.0.10
     volumes:
       - ./dns:/dns
+      - ./dns/dnsmasq.conf:/etc/dnsmasq.conf:ro
       - ./evidence:/evidence
       - ./certs:/certs:ro
 
@@ -24,6 +25,18 @@ services:
     volumes:
       - ./dns/dnsmasq-backup.conf:/etc/dnsmasq.conf:ro
       - ./certs:/certs:ro
+    command: ["dnsmasq", "--no-daemon", "-C", "/etc/dnsmasq.conf"]
+
+  dns-cache:
+    build:
+      context: ./dns
+    container_name: cn-dns-cache
+    hostname: dns-cache
+    networks:
+      cnnet:
+        ipv4_address: 172.30.0.16
+    volumes:
+      - ./dns/dnsmasq-cache.conf:/etc/dnsmasq.conf:ro
     command: ["dnsmasq", "--no-daemon", "-C", "/etc/dnsmasq.conf"]
 
   client:
