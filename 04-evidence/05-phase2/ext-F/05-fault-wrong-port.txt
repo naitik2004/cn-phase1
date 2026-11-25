@@ -1,0 +1,22 @@
+============================================================
+ CN Phase 2 — 5-Layer Diagnostic Check for app.team1.test:8443
+============================================================
+
+[Layer 1] DNS Resolution (primary=172.30.0.10, backup=172.30.0.15)
+  Primary (172.30.0.10) answer: app.team1.test.		60	IN	A	172.30.0.11
+  PASS: Resolved app.team1.test -> 172.30.0.11 via 172.30.0.10
+
+[Layer 2] IP Reachability (ping -c 2 -W 2 172.30.0.11)
+PING 172.30.0.11 (172.30.0.11) 56(84) bytes of data.
+64 bytes from 172.30.0.11: icmp_seq=1 ttl=64 time=0.243 ms
+64 bytes from 172.30.0.11: icmp_seq=2 ttl=64 time=0.084 ms
+
+--- 172.30.0.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1027ms
+rtt min/avg/max/mdev = 0.084/0.163/0.243/0.079 ms
+  PASS: 172.30.0.11 is reachable
+
+[Layer 3] TCP Port Check (nc -vz -w 2 172.30.0.11 8443)
+nc: connect to 172.30.0.11 port 8443 (tcp) failed: Connection refused
+FAIL [Layer 3 - TCP]: TCP port 8443 is closed or timed out on 172.30.0.11.
+diagnose.sh exited with 3

@@ -1,0 +1,12 @@
+NAME      IMAGE     COMMAND   SERVICE   CREATED   STATUS    PORTS
+cn-edge  | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+cn-edge  | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+cn-edge  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+cn-edge  | 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+cn-edge  | 10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+cn-edge  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+cn-edge  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+cn-edge  | /docker-entrypoint.sh: Configuration complete; ready for start up
+cn-edge  | 2026/11/25 00:31:55 [emerg] 1#1: unexpected end of file, expecting ";" or "}" in /etc/nginx/nginx.conf:36
+cn-edge  | nginx: [emerg] unexpected end of file, expecting ";" or "}" in /etc/nginx/nginx.conf:36
+--- Restore valid nginx.conf and recreate edge ---

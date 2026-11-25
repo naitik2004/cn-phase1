@@ -1,0 +1,19 @@
+============================================================
+ CN Phase 2 — 5-Layer Diagnostic Check for app.team1.test:443
+============================================================
+
+[Layer 1] DNS Resolution (primary=172.30.0.10, backup=172.30.0.15)
+  Primary (172.30.0.10) answer: app.team1.test.		60	IN	A	172.30.0.11
+  PASS: Resolved app.team1.test -> 172.30.0.11 via 172.30.0.10
+
+[Layer 2] IP Reachability (ping -c 2 -W 2 172.30.0.11)
+PING 172.30.0.11 (172.30.0.11) 56(84) bytes of data.
+
+--- 172.30.0.11 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1035ms
+
+FAIL [Layer 2 - IP]: Host 172.30.0.11 is unreachable via ICMP ping.
+diagnose.sh exited with 2
+--- Direct Layer 3 TCP check when edge is stopped ---
+nc: connect to 172.30.0.11 port 443 (tcp) timed out: Operation now in progress
+nc exited with 1

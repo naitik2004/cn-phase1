@@ -1,0 +1,16 @@
+============================================================
+ CN Phase 2 — 5-Layer Diagnostic Check for app.team1.test:443
+============================================================
+
+[Layer 1] DNS Resolution (primary=172.30.0.99, backup=172.30.0.99)
+  Primary (172.30.0.99) answer: <none>
+FAIL [Layer 1 - DNS]: Could not resolve app.team1.test from 172.30.0.99 (or 172.30.0.99).
+diagnose.sh exited with 1
+--- Confirm ping to 172.30.0.11 still works ---
+PING 172.30.0.11 (172.30.0.11) 56(84) bytes of data.
+64 bytes from 172.30.0.11: icmp_seq=1 ttl=64 time=0.558 ms
+64 bytes from 172.30.0.11: icmp_seq=2 ttl=64 time=0.117 ms
+
+--- 172.30.0.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1041ms
+rtt min/avg/max/mdev = 0.117/0.337/0.558/0.220 ms
