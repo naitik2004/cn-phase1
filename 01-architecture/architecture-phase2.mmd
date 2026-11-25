@@ -1,0 +1,32 @@
+flowchart TB
+    subgraph HOST["Single macOS Host (Docker Engine / Compose)"]
+        subgraph CNNET["cnnet (172.30.0.0/24, gateway 172.30.0.1)"]
+            CLIENT["cn-client<br/>172.30.0.20<br/>dig, curl, nc, openssl"]
+            DNSCACHE["cn-dns-cache<br/>172.30.0.16 :53/UDP<br/>dnsmasq caching forwarder"]
+            DNS1["cn-dns (Primary DNS)<br/>172.30.0.10 :53/UDP<br/>dnsmasq"]
+            DNS2["cn-dns2 (Backup DNS)<br/>172.30.0.15 :53/UDP<br/>dnsmasq"]
+            EDGE1["cn-edge (edge1 Primary)<br/>172.30.0.11 :443/TCP<br/>Nginx TLS + LB"]
+            EDGE2["cn-edge2 (edge2 Standby)<br/>172.30.0.14 :443/TCP<br/>Nginx TLS + LB"]
+        end
+
+        subgraph BACKENDNET["backend-net (172.31.0.0/24, internal: true)"]
+            EDGE1_B["cn-edge (backend-net NIC)<br/>172.31.0.11"]
+            EDGE2_B["cn-edge2 (backend-net NIC)<br/>172.31.0.14"]
+            BACKENDA["cn-backend-a<br/>172.31.0.12 :3001/TCP<br/>Python HTTP"]
+            BACKENDB["cn-backend-b<br/>172.31.0.13 :3002/TCP<br/>Python HTTP"]
+        end
+    end
+
+    CLIENT -->|"UDP 53 (direct or cached)"| DNSCACHE
+    CLIENT -->|"UDP 53 (primary/backup)"| DNS1
+    CLIENT -->|"UDP 53 (failover)"| DNS2
+    DNSCACHE -->|"UDP 53"| DNS1
+    DNSCACHE -->|"UDP 53"| DNS2
+    CLIENT -->|"TCP 443 HTTPS (TLS 1.2/1.3)"| EDGE1
+    CLIENT -.->|"TCP 443 HTTPS (DNS cutover)"| EDGE2
+    EDGE1 --- EDGE1_B
+    EDGE2 --- EDGE2_B
+    EDGE1_B -->|"HTTP :3001"| BACKENDA
+    EDGE1_B -->|"HTTP :3002"| BACKENDB
+    EDGE2_B -.->|"HTTP :3001"| BACKENDA
+    EDGE2_B -.->|"HTTP :3002"| BACKENDB
