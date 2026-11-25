@@ -2,7 +2,7 @@
 
 > **Implementation note:** All network roles are implemented as separate Docker containers on a **single macOS host** (representing separate logical machines, not physical hardware).
 
-**Team Climber:** <NAITIK PANDEY , SAHIL CHAND>
+**Team Climber:** NAITIK PANDEY , SAHIL CHAND
 
 ---
 
