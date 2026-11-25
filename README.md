@@ -2,6 +2,8 @@
 
 > **Implementation note:** All network roles are implemented as separate Docker containers on a **single macOS host** (representing separate logical machines, not physical hardware).
 
+**Team Climber:** <NAITIK PANDEY , SAHIL CHAND>
+
 ---
 
 ## Phase 2 Quick Start
@@ -58,3 +60,15 @@ cn-phase1/
 ├── TROUBLESHOOTING.md        # Layer-by-layer debug guide & symptom/fix table
 └── docker-compose.yml        # Full Phase 2 orchestration
 ```
+
+---
+
+## Evidence
+
+Phase 1 evidence is in `04-evidence/A-lan` to `G-capture` and `04-evidence/failures`. Phase 2 evidence is in `04-evidence/05-phase2` (ext-A to ext-F and final-state.txt). Phase 1 evidence was captured with an earlier TLS certificate; the certificate was regenerated on 2026-11-25 (see 02-config/tls-setup-notes.md).
+
+---
+
+## Limitations
+
+This project runs as Docker containers on a single macOS host, each container representing one machine role. Isolation uses Docker network segmentation instead of macOS pf, and the Extension B cache is a dnsmasq caching container, not an OS cache. See PHASE2_REPORT.md, section "Honest limitations", for details.
